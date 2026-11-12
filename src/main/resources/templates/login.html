@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="sv" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logga in - Helpdesk</title>
+</head>
+<body>
+
+<h1>Helpdesk</h1>
+<h2>Logga in</h2>
+
+<p th:if="${param.error}" style="color: red;">
+    Fel användarnamn eller lösenord.
+</p>
+
+<p th:if="${param.logout}" style="color: green;">
+    Du har loggats ut.
+</p>
+
+<form th:action="@{/login}" method="post">
+
+    <div>
+        <label for="username">Användarnamn:</label>
+        <input type="text"
+               id="username"
+               name="username"
+               required>
+    </div>
+
+    <div>
+        <label for="password">Lösenord:</label>
+        <input type="password"
+               id="password"
+               name="password"
+               required>
+    </div>
+
+    <button type="submit">Logga in</button>
+
+</form>
+
+</body>
+</html>

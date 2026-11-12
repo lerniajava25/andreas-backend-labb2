@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="sv"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Administration - Helpdesk</title>
+</head>
+
+<body>
+
+<h1>Administrationspanel</h1>
+
+<h2>Användare</h2>
+
+
+<p>
+    <a th:href="@{/admin/users/new}">
+        Skapa ny användare
+    </a>
+</p>
+
+<p th:if="${successMessage}"
+   th:text="${successMessage}">
+</p>
+
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Användarnamn</th>
+        <th>Roll</th>
+        <th>Status</th>
+        <th>Ändra roll</th>
+        <th>Kontohantering</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="user : ${users}">
+
+        <td th:text="${user.id}"></td>
+
+        <td th:text="${user.username}"></td>
+
+        <td th:text="${user.role}"></td>
+
+        <td th:text="${user.enabled ? 'Aktiv' : 'Inaktiv'}"></td>
+
+
+        <td>
+            <form th:if="${user.username != currentUsername}"
+                  th:action="@{/admin/users/{id}/role(id=${user.id})}"
+                  method="post">
+
+                <select name="role">
+
+                    <option value="USER"
+                            th:selected="${user.role.name() == 'USER'}">
+                        USER
+                    </option>
+
+                    <option value="AGENT"
+                            th:selected="${user.role.name() == 'AGENT'}">
+                        AGENT
+                    </option>
+
+                    <option value="ADMIN"
+                            th:selected="${user.role.name() == 'ADMIN'}">
+                        ADMIN
+                    </option>
+
+                </select>
+
+                <button type="submit">
+                    Spara
+                </button>
+
+            </form>
+
+            <span th:if="${user.username == currentUsername}">
+                Ditt konto
+            </span>
+
+        </td>
+
+
+        <td>
+
+            <form th:if="${user.username != currentUsername}"
+                  th:action="@{/admin/users/{id}/enabled(id=${user.id})}"
+                  method="post">
+
+                <input type="hidden"
+                       name="enabled"
+                       th:value="${!user.enabled}">
+
+                <button type="submit"
+                        th:text="${user.enabled ? 'Inaktivera' : 'Aktivera'}">
+                </button>
+
+            </form>
+
+            <span th:if="${user.username == currentUsername}">
+        Ditt konto
+    </span>
+
+        </td>
+
+
+
+
+    </tr>
+    </tbody>
+</table>
+
+<p>
+    <a th:href="@{/tickets}">
+        Tillbaka till mina ärenden
+    </a>
+</p>
+
+</body>
+</html>

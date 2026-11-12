@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="sv"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Skapa användare - Helpdesk</title>
+</head>
+
+<body>
+
+<h1>Skapa ny användare</h1>
+
+
+<p th:if="${errorMessage}"
+   th:text="${errorMessage}">
+</p>
+
+
+<form th:action="@{/admin/users}" method="post">
+
+    <div>
+        <label for="username">Användarnamn:</label>
+
+        <input type="text"
+               id="username"
+               name="username"
+               th:value="${enteredUsername}"
+               required>
+    </div>
+
+    <br>
+
+    <div>
+        <label for="password">Lösenord:</label>
+
+        <input type="password"
+               id="password"
+               name="password"
+               required>
+    </div>
+
+    <br>
+
+    <div>
+        <label for="role">Roll:</label>
+
+        <select id="role" name="role" required>
+
+            <option th:each="role : ${roles}"
+                    th:value="${role}"
+                    th:text="${role}">
+            </option>
+
+        </select>
+    </div>
+
+    <br>
+
+    <button type="submit">
+        Skapa användare
+    </button>
+
+</form>
+
+<p>
+    <a th:href="@{/admin/users}">
+        Tillbaka till administrationspanelen
+    </a>
+</p>
+
+</body>
+</html>

@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="sv"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Ärendedetaljer - Helpdesk</title>
+</head>
+<body>
+
+<h1>Ärendedetaljer</h1>
+
+<h2 th:text="${ticket.title}">Ärendets titel</h2>
+
+<p>
+  <strong>Ärende-ID:</strong>
+  <span th:text="${ticket.id}"></span>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <span th:text="${ticket.status}"></span>
+</p>
+
+
+<p>
+  <strong>Ansvarig:</strong>
+
+  <span th:if="${ticket.assignedTo == null}">
+        Ej tilldelad
+    </span>
+
+  <span th:unless="${ticket.assignedTo == null}"
+        th:text="${ticket.assignedTo.username}">
+        Agent
+    </span>
+</p>
+
+
+<div sec:authorize="hasAnyRole('AGENT', 'ADMIN')">
+
+  <form th:if="${ticket.assignedTo == null}"
+        th:action="@{/agent/tickets/{id}/assign(id=${ticket.id})}"
+        method="post">
+
+    <button type="submit">
+      Tilldela mig ärendet
+    </button>
+
+  </form>
+
+</div>
+
+
+<div sec:authorize="hasAnyRole('AGENT', 'ADMIN')">
+
+  <h3>Ändra ärendestatus</h3>
+
+  <form th:action="@{/agent/tickets/{id}/status(id=${ticket.id})}"
+        method="post">
+
+    <label for="status">Status:</label>
+
+    <select id="status" name="status">
+
+      <option value="NEW"
+              th:selected="${ticket.status.name() == 'NEW'}">
+        Nytt
+      </option>
+
+      <option value="IN_PROGRESS"
+              th:selected="${ticket.status.name() == 'IN_PROGRESS'}">
+        Pågående
+      </option>
+
+      <option value="WAITING_FOR_USER"
+              th:selected="${ticket.status.name() == 'WAITING_FOR_USER'}">
+        Väntar på användare
+      </option>
+
+      <option value="RESOLVED"
+              th:selected="${ticket.status.name() == 'RESOLVED'}">
+        Löst
+      </option>
+
+      <option value="CLOSED"
+              th:selected="${ticket.status.name() == 'CLOSED'}">
+        Stängt
+      </option>
+
+    </select>
+
+    <button type="submit">
+      Uppdatera status
+    </button>
+
+  </form>
+
+</div>
+
+
+<p>
+  <strong>Beskrivning:</strong>
+</p>
+
+<p th:text="${ticket.description}">
+  Ärendets beskrivning
+</p>
+
+<p>
+  <strong>Skapad av:</strong>
+  <span th:text="${ticket.createdBy.username}"></span>
+</p>
+
+<p>
+  <strong>Skapad:</strong>
+  <span th:text="${ticket.createdAt}"></span>
+</p>
+
+<p>
+  <strong>Senast ändrad:</strong>
+  <span th:text="${ticket.lastModified}"></span>
+</p>
+
+
+<hr>
+
+<h2>Kommentarer</h2>
+
+<p th:if="${successMessage}"
+   th:text="${successMessage}">
+</p>
+
+<p th:if="${#lists.isEmpty(comments)}">
+  Inga kommentarer ännu.
+</p>
+
+<div th:each="comment : ${comments}">
+
+  <p>
+    <strong th:text="${comment.author.username}">
+      Användare
+    </strong>
+
+    <small th:text="${comment.createdAt}">
+      Datum
+    </small>
+  </p>
+
+  <p th:text="${comment.content}">
+    Kommentarens innehåll
+  </p>
+
+  <hr>
+
+</div>
+
+<h3>Skriv en kommentar</h3>
+
+<form th:action="@{/tickets/{id}/comments(id=${ticket.id})}"
+      method="post">
+
+  <div>
+    <label for="content">Din kommentar</label>
+
+    <textarea
+            id="content"
+            name="content"
+            rows="5"
+            maxlength="5000"
+            required></textarea>
+  </div>
+
+  <button type="submit">
+    Skicka kommentar
+  </button>
+
+</form>
+
+
+<p>
+  <a th:href="@{/tickets}">Tillbaka till mina ärenden</a>
+</p>
+
+</body>
+</html>
