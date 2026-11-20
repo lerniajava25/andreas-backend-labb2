@@ -28,7 +28,7 @@ class TicketRepositoryTest {
     @Test
     void shouldSaveAndFindTicketByCreator() {
 
-        // Arrange - skapa en användare
+        // Arrange
         User user = new User(
                 "ticketuser",
                 "hashedPassword",
@@ -37,7 +37,7 @@ class TicketRepositoryTest {
 
         user = userRepository.save(user);
 
-        // Arrange - skapa ett ärende
+        // Arrange
         Ticket ticket = new Ticket(
                 "Problem med datorn",
                 "Datorn startar inte",
@@ -46,11 +46,11 @@ class TicketRepositoryTest {
 
         ticketRepository.save(ticket);
 
-        // Act - hämta ärenden som skapats av användaren
+        // Act
         List<Ticket> tickets =
                 ticketRepository.findByCreatedById(user.getId());
 
-        // Assert - kontrollera resultatet
+        // Assert
         assertEquals(1, tickets.size());
         assertEquals("Problem med datorn", tickets.get(0).getTitle());
         assertEquals(TicketStatus.NEW, tickets.get(0).getStatus());

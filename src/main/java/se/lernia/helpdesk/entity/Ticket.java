@@ -37,7 +37,6 @@ public class Ticket {
     private LocalDateTime lastModified;
 
     protected Ticket() {
-        // Krävs av JPA
     }
 
     public Ticket(String title, String description, User createdBy) {

@@ -107,13 +107,13 @@ public class TicketService {
     @Transactional
     public Ticket assignTicketToSelf(Long ticketId, String username) {
 
-        // Hämta den inloggade användaren
+
         User agent = userRepository.findByUsername(username)
                 .orElseThrow(() ->
                         new IllegalArgumentException("User not found")
                 );
 
-        // Kontrollera att användaren är AGENT eller ADMIN
+
         if (agent.getRole() != Role.AGENT &&
                 agent.getRole() != Role.ADMIN) {
 
@@ -122,20 +122,20 @@ public class TicketService {
             );
         }
 
-        // Hämta ärendet
+
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() ->
                         new IllegalArgumentException("Ticket not found")
                 );
 
-        // Förhindra att någon tar över ett redan tilldelat ärende
+
         if (ticket.getAssignedTo() != null) {
             throw new IllegalStateException(
                     "Ticket is already assigned"
             );
         }
 
-        // Tilldela ärendet till den inloggade agenten
+
         ticket.setAssignedTo(agent);
 
         return ticketRepository.save(ticket);
@@ -148,13 +148,13 @@ public class TicketService {
             TicketStatus newStatus,
             String username
     ) {
-        // Hämta den inloggade användaren
+
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() ->
                         new IllegalArgumentException("User not found")
                 );
 
-        // Endast AGENT och ADMIN får ändra status
+
         if (user.getRole() != Role.AGENT &&
                 user.getRole() != Role.ADMIN) {
 
@@ -163,20 +163,20 @@ public class TicketService {
             );
         }
 
-        // Kontrollera att en status har skickats in
+
         if (newStatus == null) {
             throw new IllegalArgumentException(
                     "Ticket status cannot be null"
             );
         }
 
-        // Hämta ärendet
+
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() ->
                         new IllegalArgumentException("Ticket not found")
                 );
 
-        // Uppdatera statusen
+
         ticket.setStatus(newStatus);
 
         return ticketRepository.save(ticket);

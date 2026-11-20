@@ -15,7 +15,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        // Publika resurser
+
                         .requestMatchers(
                                 "/login",
                                 "/css/**",
@@ -23,30 +23,28 @@ public class SecurityConfig {
                                 "/images/**"
                         ).permitAll()
 
-                        // Endast ADMIN
+
                         .requestMatchers("/admin/**")
                         .hasRole("ADMIN")
 
-                        // AGENT och ADMIN
                         .requestMatchers("/agent/**")
                         .hasAnyRole("AGENT", "ADMIN")
 
-                        // Inloggade användare
+
                         .requestMatchers("/tickets/**")
                         .authenticated()
 
-                        // Övriga sidor kräver inloggning
                         .anyRequest().authenticated()
                 )
 
-                // Spring Security hanterar inloggningen
+
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/tickets", true)
                         .permitAll()
                 )
 
-                // Utloggning
+
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()

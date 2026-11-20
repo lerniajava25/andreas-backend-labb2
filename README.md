@@ -1,98 +1,60 @@
 # Helpdesk – Ärendehanteringssystem
 
-Ett ärendehanteringssystem utvecklat som laboration i Spring Boot.
-
-Applikationen låter användare skapa och följa supportärenden. Supportpersonal kan hantera inkomna ärenden och administratörer kan hantera användarkonton.
-
-## Tekniker
-
-- Java 21
-- Spring Boot
-- Spring Security
-- Spring Data JPA
-- Thymeleaf
-- MySQL
-- Maven
-- JUnit 5 och Mockito
+Ett ärendehanteringssystem byggt med Java och Spring Boot som en del av utbildningen till system- och webbutvecklare.
 
 ## Funktioner
 
-Systemet har tre olika användarroller.
+Systemet har tre användarroller:
 
-**USER**
-- Logga in och skapa supportärenden
-- Se och följa sina egna ärenden
-- Visa ärendedetaljer
-- Skriva kommentarer på egna ärenden
+- **USER** – Skapa och hantera egna ärenden samt kommentera.
+- **AGENT** – Hantera, tilldela och ändra status på ärenden.
+- **ADMIN** – Hantera ärenden och användare.
 
-**AGENT**
-- Se alla supportärenden
-- Tilldela ärenden till sig själv
-- Ändra ärendestatus
-- Skriva kommentarer på ärenden
+## Tekniker
 
-**ADMIN**
-- Alla funktioner som AGENT har
-- Skapa nya användare
-- Ändra användarroller
-- Aktivera och inaktivera användarkonton
-
-Ärenden kan ha följande status:
-
-`NEW`, `IN_PROGRESS`, `WAITING_FOR_USER`, `RESOLVED`, `CLOSED`
-
-## Databas
-
-Applikationen använder MySQL tillsammans med Spring Data JPA.
-
-De tre huvudsakliga entiteterna är:
-
-- **User** – användaruppgifter, roller och kontostatus
-- **Ticket** – supportärenden och deras status
-- **Comment** – kommentarer kopplade till ärenden
+- Java 21 / Spring Boot
+- Spring Security och Spring Data JPA
+- Thymeleaf
+- MySQL 8.4 / Docker
+- Maven / JUnit
 
 ## Starta projektet
 
-Projektet kräver Java 21 och en MySQL-databas.
+**Krav:** Java 21 och Docker Desktop.
 
-1. Starta MySQL och skapa en databas som heter `helpdesk`.
-2. Ange miljövariabeln `DB_PASSWORD` med lösenordet till MySQL.
-3. Kontrollera databasinställningarna i `application.properties`.
-4. Starta applikationen via IntelliJ eller Maven.
-
-Med Maven Wrapper:
+1. Klona projektet från GitHub.
+2. Öppna en terminal i projektmappen.
+3. Starta databasen:
 
 ```bash
+export DB_PASSWORD=root
+docker compose up -d
+```
+
+4. Vänta tills databasen är `healthy`:
+
+```bash
+docker compose ps
+```
+
+5. Starta applikationen:
+
+```bash
+export SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3307/helpdesk
 ./mvnw spring-boot:run
 ```
 
-Applikationen nås sedan på:
+Öppna sedan `http://localhost:8080`.
 
-http://localhost:8080
+## Köra tester
 
-För utvecklingsmiljön används även miljövariablerna `DEV_USER_PASSWORD`, `DEV_AGENT_PASSWORD` och `DEV_ADMIN_PASSWORD` för testkontona.
-
-## Tester
-
-Projektet innehåller enhetstester och integrationstester för bland annat användarhantering, ärenden, kommentarer och behörighetskontroller.
-
-Tester körs med:
+I samma terminal (eller en ny terminal med `DB_PASSWORD` angivet):
 
 ```bash
-./mvnw test
+export SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3307/helpdesk_test
+./mvnw clean test
 ```
 
-Integrationstesterna använder en separat MySQL-databas, `helpdesk_test`.
+Projektet innehåller **58 tester**.
 
-## Projektstruktur
-
-- `controller` – hanterar HTTP-förfrågningar och webbsidor
-- `service` – innehåller applikationens logik
-- `repository` – kommunicerar med databasen
-- `entity` – innehåller databasentiteterna
-- `security` – hanterar användarinloggning
-- `config` – konfiguration för applikationen
-
-## Om laborationen
-
-Projektet är utvecklat för att öva på Spring Boot, databashantering med JPA, autentisering och auktorisering med Spring Security samt serverrenderade webbsidor med Thymeleaf.
+Docker Compose skapar databaserna `helpdesk` och `helpdesk_test` automatiskt vid första uppstarten.

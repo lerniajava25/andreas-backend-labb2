@@ -54,20 +54,20 @@ public class UserService {
         username = username.trim();
 
 
-        // Kontrollera om användarnamnet redan finns
+
         if (userRepository.existsByUsername(username)) {
             throw new IllegalArgumentException(
                     "Username already exists: " + username
             );
         }
 
-        // Hasha lösenordet
+
         String hashedPassword = passwordEncoder.encode(password);
 
-        // Skapa användaren
+
         User user = new User(username, hashedPassword, role);
 
-        // Spara användaren i databasen
+
         return userRepository.save(user);
     }
 
@@ -93,33 +93,33 @@ public class UserService {
             Role newRole,
             String adminUsername
     ) {
-        // Hämta den inloggade administratören
+
         User admin = userRepository.findByUsername(adminUsername)
                 .orElseThrow(() ->
                         new IllegalArgumentException("Admin not found")
                 );
 
-        // Endast ADMIN får ändra roller
+
         if (admin.getRole() != Role.ADMIN) {
             throw new AccessDeniedException(
                     "Only admins can change user roles"
             );
         }
 
-        // Kontrollera att en giltig roll skickats in
+
         if (newRole == null) {
             throw new IllegalArgumentException(
                     "Role cannot be null"
             );
         }
 
-        // Hämta användaren som ska ändras
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() ->
                         new IllegalArgumentException("User not found")
                 );
 
-        // Förhindra att ADMIN ändrar sin egen roll
+
         if (user.getId().equals(admin.getId())) {
             throw new IllegalStateException(
                     "Admins cannot change their own role"
@@ -138,7 +138,7 @@ public class UserService {
             }
         }
 
-        // Uppdatera rollen
+
         user.setRole(newRole);
 
         return userRepository.save(user);
@@ -151,26 +151,26 @@ public class UserService {
             boolean enabled,
             String adminUsername
     ) {
-        // Hämta den inloggade administratören
+
         User admin = userRepository.findByUsername(adminUsername)
                 .orElseThrow(() ->
                         new IllegalArgumentException("Admin not found")
                 );
 
-        // Endast ADMIN får ändra kontostatus
+
         if (admin.getRole() != Role.ADMIN || !admin.isEnabled()) {
             throw new AccessDeniedException(
                     "Only active admins can change account status"
             );
         }
 
-        // Hämta användaren som ska ändras
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() ->
                         new IllegalArgumentException("User not found")
                 );
 
-        // Förhindra att administratören inaktiverar sig själv
+
         if (user.getId().equals(admin.getId()) && !enabled) {
             throw new IllegalStateException(
                     "Admins cannot disable their own account"
@@ -193,7 +193,7 @@ public class UserService {
         }
 
 
-        // Uppdatera kontots status
+
         user.setEnabled(enabled);
 
         return userRepository.save(user);

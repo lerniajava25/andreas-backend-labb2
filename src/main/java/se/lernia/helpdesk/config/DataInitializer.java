@@ -19,7 +19,6 @@ public class DataInitializer {
 
         return args -> {
 
-            // Skapa bara testkonton när dev-profilen är aktiv
             if (!environment.matchesProfiles("dev")) {
                 return;
             }
@@ -41,7 +40,7 @@ public class DataInitializer {
             String passwordVariable,
             Role role) {
 
-        // Hämta lösenord från miljövariabler
+
         String password = System.getenv(passwordVariable);
 
         if (password == null || password.isBlank()) {
@@ -53,7 +52,7 @@ public class DataInitializer {
         try {
             userService.createUser(username, password, role);
         } catch (IllegalArgumentException exception) {
-            // Kontot finns redan - skapa inte en dubblett
+            // Skapa ej dubblett
         }
     }
 }

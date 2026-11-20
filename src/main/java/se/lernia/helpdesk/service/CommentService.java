@@ -35,10 +35,10 @@ public class CommentService {
             String content,
             String username
     ) {
-        // Kontrollera att användaren får läsa ärendet
+
         Ticket ticket = ticketService.getTicketById(ticketId, username);
 
-        // Kontrollera att kommentaren innehåller text
+
         if (content == null || content.isBlank()) {
             throw new IllegalArgumentException(
                     "Comment cannot be empty"
@@ -51,13 +51,13 @@ public class CommentService {
             );
         }
 
-        // Hämta författaren
+
         User author = userRepository.findByUsername(username)
                 .orElseThrow(() ->
                         new IllegalArgumentException("User not found")
                 );
 
-        // Skapa och spara kommentaren
+
         Comment comment = new Comment(content, ticket, author);
 
         return commentRepository.save(comment);
@@ -68,7 +68,7 @@ public class CommentService {
             Long ticketId,
             String username
     ) {
-        // Samma behörighetskontroll vid läsning
+
         ticketService.getTicketById(ticketId, username);
 
         return commentRepository.findByTicketIdOrderByCreatedAtAsc(

@@ -20,21 +20,21 @@ class UserRepositoryTest {
     @Test
     void shouldSaveAndFindUserByUsername() {
 
-        // Arrange - skapa en testanvändare
+        // Arrange
         User user = new User(
                 "testuser",
                 "temporary-password",
                 Role.USER
         );
 
-        // Act - spara och hämta användaren
+        // Act
         userRepository.save(user);
 
         User foundUser = userRepository
                 .findByUsername("testuser")
                 .orElseThrow();
 
-        // Assert - kontrollera resultatet
+        // Assert
         assertEquals("testuser", foundUser.getUsername());
         assertEquals(Role.USER, foundUser.getRole());
         assertTrue(foundUser.isEnabled());
